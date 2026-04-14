@@ -64,6 +64,7 @@ describe('run()', () => {
         badge_branch: 'badge-generator',
         main_branch: 'main',
         github_token: 'fake-token',
+        comment_title: '',
       };
       return values[key];
     });
@@ -120,6 +121,48 @@ describe('run()', () => {
       'No open PR found for branch feature-branch. Skipping comment.'
     );
     expect(commentCoverageOnPR).not.toHaveBeenCalled();
+  });
+
+  it('should forward a custom comment title when provided', async () => {
+    core.getInput.mockImplementation((key) => {
+      const values = {
+        name: '95%',
+        prefix: 'coverage',
+        icon: 'jest',
+        color: 'green',
+        style: 'flat-square',
+        path: 'badges/coverage.svg',
+        labelColor: '',
+        logoColor: '',
+        link: '',
+        cacheSeconds: '',
+        badge_branch: 'badge-generator',
+        main_branch: 'main',
+        github_token: 'fake-token',
+        comment_title: 'Vitest Coverage Result',
+      };
+      return values[key];
+    });
+
+    github.context.ref = 'refs/heads/feature-branch';
+    github.context.eventName = 'push';
+
+    const mockList = jest.fn().mockResolvedValue({
+      data: [{ number: 42 }],
+    });
+
+    github.getOctokit.mockReturnValue({
+      rest: { pulls: { list: mockList } },
+    });
+
+    await run();
+
+    expect(commentCoverageOnPR).toHaveBeenCalledWith({
+      token: 'fake-token',
+      coverage: '95%',
+      prNumber: 42,
+      commentTitle: 'Vitest Coverage Result',
+    });
   });
 
   it('should skip if no token and not main', async () => {
