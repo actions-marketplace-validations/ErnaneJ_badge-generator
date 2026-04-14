@@ -42,6 +42,31 @@ _👉 See more examples in [`examples/README.md`](examples/README.md)_
 | `badge_branch` | ❌        | Branch where the badge will be committed (default: `badge-generator`)  |
 | `main_branch`  | ❌        | The main branch name (default: `main`)                                 |
 | `github_token` | ❌        | GitHub token (required for PR comments)                                |
+| `comment_title` | ❌       | Custom title for the PR comment (default: `Code Coverage Result`)      |
+
+### PR comment customization
+
+When `github_token` is provided, the action can comment the latest coverage result on the pull request. If you use the action multiple times in the same workflow, set `comment_title` to make each comment clearer.
+
+```yaml
+- name: Generate Vitest coverage badge
+  uses: ernanej/badge-generator@main
+  with:
+    name: '79.14%'
+    prefix: 'coverage'
+    path: 'badges/coverage.svg'
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    comment_title: 'Vitest Coverage Result'
+
+- name: Generate Cypress coverage badge
+  uses: ernanej/badge-generator@main
+  with:
+    name: '42.66%'
+    prefix: 'coverage'
+    path: 'badges/coverage-cypress.svg'
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+    comment_title: 'Cypress Coverage Result'
+```
 
 ## 🛠️ Local Development
 
