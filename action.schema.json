@@ -55,6 +55,11 @@
       "description": "Optional Shields.io cache duration (in seconds).",
       "required": false,
       "default": ""
+    },
+    "comment_title": {
+      "description": "Optional custom title for the pull request comment (e.g. 'Vitest Coverage Result').",
+      "required": false,
+      "default": ""
     }
   },
   "runs": {
