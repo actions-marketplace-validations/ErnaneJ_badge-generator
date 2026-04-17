@@ -55,6 +55,26 @@
       "description": "Optional Shields.io cache duration (in seconds).",
       "required": false,
       "default": ""
+    },
+    "badge_branch": {
+      "description": "The branch where the badge should be committed (e.g. badge-generator).",
+      "required": false,
+      "default": "badge-generator"
+    },
+    "main_branch": {
+      "description": "The default branch of the repository (e.g. main).",
+      "required": false,
+      "default": "main"
+    },
+    "github_token": {
+      "description": "GitHub token to post comments on pull requests.",
+      "required": false,
+      "default": ""
+    },
+    "comment_title": {
+      "description": "Optional custom title for the pull request comment (e.g. 'Vitest Coverage Result').",
+      "required": false,
+      "default": ""
     }
   },
   "runs": {

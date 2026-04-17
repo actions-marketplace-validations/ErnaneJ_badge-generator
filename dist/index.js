@@ -36365,9 +36365,10 @@ const github = __nccwpck_require__(3228);
  * @param {string} options.token - GitHub token
  * @param {string} options.coverage - Coverage percentage string (e.g. "98.5%")
  * @param {number} [options.prNumber] - Pull request number (optional override)
+ * @param {string} [options.commentTitle] - Optional title for the PR comment
  * @returns {Promise<void>}
  */
-async function commentCoverageOnPR({ token, coverage, prNumber }) {
+async function commentCoverageOnPR({ token, coverage, prNumber, commentTitle }) {
   const context = github.context;
   const number = prNumber || context.payload.pull_request?.number;
 
@@ -36379,8 +36380,9 @@ async function commentCoverageOnPR({ token, coverage, prNumber }) {
   }
 
   const octokit = github.getOctokit(token);
+  const title = commentTitle || 'Code Coverage Result';
 
-  const body = `🛡️ **Code Coverage Result**
+  const body = `🛡️ **${title}**
 
 The latest CI run for this pull request reports a code coverage of \`${coverage}\`.`;
 
@@ -36426,6 +36428,7 @@ async function run() {
       badgeBranch: core.getInput('badge_branch') || 'badge-generator',
       mainBranch: core.getInput('main_branch') || 'main',
       githubToken: core.getInput('github_token'),
+      commentTitle: core.getInput('comment_title'),
     };
 
     const isPR = github.context.eventName === 'pull_request';
@@ -36455,11 +36458,17 @@ async function run() {
       if (pullRequests.length > 0) {
         const prNumber = pullRequests[0].number;
         core.info(`Found open PR #${prNumber} for branch ${currentBranch}. Commenting coverage...`);
-        await commentCoverageOnPR({
+        const commentOptions = {
           token: inputs.githubToken,
           coverage: inputs.name,
           prNumber,
-        });
+        };
+
+        if (inputs.commentTitle) {
+          commentOptions.commentTitle = inputs.commentTitle;
+        }
+
+        await commentCoverageOnPR(commentOptions);
       } else {
         core.info(`No open PR found for branch ${currentBranch}. Skipping comment.`);
       }

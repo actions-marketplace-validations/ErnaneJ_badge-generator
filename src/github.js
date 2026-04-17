@@ -8,9 +8,10 @@ const github = require('@actions/github');
  * @param {string} options.token - GitHub token
  * @param {string} options.coverage - Coverage percentage string (e.g. "98.5%")
  * @param {number} [options.prNumber] - Pull request number (optional override)
+ * @param {string} [options.commentTitle] - Optional title for the PR comment
  * @returns {Promise<void>}
  */
-async function commentCoverageOnPR({ token, coverage, prNumber }) {
+async function commentCoverageOnPR({ token, coverage, prNumber, commentTitle }) {
   const context = github.context;
   const number = prNumber || context.payload.pull_request?.number;
 
@@ -22,8 +23,9 @@ async function commentCoverageOnPR({ token, coverage, prNumber }) {
   }
 
   const octokit = github.getOctokit(token);
+  const title = commentTitle || 'Code Coverage Result';
 
-  const body = `🛡️ **Code Coverage Result**
+  const body = `🛡️ **${title}**
 
 The latest CI run for this pull request reports a code coverage of \`${coverage}\`.`;
 
