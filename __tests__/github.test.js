@@ -67,6 +67,21 @@ describe('commentCoverageOnPR', () => {
     });
   });
 
+  it('should use a custom comment title when provided', async () => {
+    await commentCoverageOnPR({
+      token: 'fake-token',
+      coverage: '79%',
+      commentTitle: 'Cypress Coverage Result',
+    });
+
+    expect(mockCreateComment).toHaveBeenCalledWith({
+      owner: 'user',
+      repo: 'repo',
+      issue_number: 123,
+      body: expect.stringContaining('🛡️ **Cypress Coverage Result**'),
+    });
+  });
+
   it('should skip if no PR number is found', async () => {
     github.context.payload.pull_request = undefined;
 

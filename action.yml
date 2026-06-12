@@ -66,10 +66,15 @@ inputs:
     required: false
     default: ''
 
+  comment_title:
+    description: 'Optional custom title for the pull request comment (e.g. "Vitest Coverage Result").'
+    required: false
+    default: ''
+
 outputs: {}
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
 
 branding:
